@@ -23,6 +23,25 @@
 
 ---
 
+## 💖 Sponsor / 打赏
+
+If PageForge saves you time, consider supporting its development — every tip helps keep it open-source and ad-free. Thank you! 🙏
+
+- **GitHub Sponsors** — once approved, a `Sponsor` button appears automatically on this repo (wired via [`.github/FUNDING.yml`](.github/FUNDING.yml)).
+- **PayPal / Buy Me a Coffee / Ko-fi** — replace the placeholders in `FUNDING.yml` with your own handles/links:
+  - PayPal: `https://paypal.me/your-paypal`
+  - Buy Me a Coffee: `https://buymeacoffee.com/your-handle`
+  - Ko-fi: `https://ko-fi.com/your-handle`
+
+Scan to tip (placeholder QR — regenerate with your real link):
+
+![Sponsor QR](assets/sponsor-qr.png)
+
+> Maintainers: edit `.github/FUNDING.yml` and the links above. To regenerate the QR from your own link, run:
+> `python -c "import segno; segno.make('YOUR_LINK').save('assets/sponsor-qr.png', scale=8, border=4)"`
+
+---
+
 ## Features
 
 - **One-click page capture** — the Chrome extension serializes the live DOM with inlined computed styles.
