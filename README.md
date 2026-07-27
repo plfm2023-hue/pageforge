@@ -28,14 +28,14 @@
 If PageForge saves you time, consider supporting its development — every tip helps keep it open-source and ad-free. Thank you! 🙏
 
 - **GitHub Sponsors** — once approved, a `Sponsor` button appears automatically on this repo (wired via [`.github/FUNDING.yml`](.github/FUNDING.yml)).
-- **PayPal** — replace the placeholder in `FUNDING.yml` with your `paypal.me` link:
-  - PayPal: `https://paypal.me/your-paypal`
+- **PayPal** — scan the QR below or open your `paypal.me` link:
+  - PayPal: `https://paypal.me/plfm2023-hue`
 
-Scan to tip (placeholder QR — point it at your PayPal link once set):
+Scan to tip (PayPal):
 
 ![Sponsor QR](assets/sponsor-qr.png)
 
-> Maintainers: set your `paypal.me` handle in `.github/FUNDING.yml` and regenerate the QR:
+> Maintainers: to change the PayPal handle, edit `.github/FUNDING.yml` and regenerate the QR:
 > `python -c "import segno; segno.make('https://paypal.me/你的名').save('assets/sponsor-qr.png', scale=8, border=4)"`
 
 ---
