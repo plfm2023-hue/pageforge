@@ -1,9 +1,7 @@
 # 打赏 / Sponsor 配置
 # GitHub 会在仓库页自动显示 "Sponsor" 按钮（需先通过 github.com/sponsors 审核）。
-# 把下面的占位名替换成你自己的账号即可。
+# 把下面的 PayPal 占位链接替换成你自己的即可。
 
-github: [your-username]
-buymeacoffee: your-handle
-ko_fi: your-handle
+github: [plfm2023-hue]
 custom:
   - "https://paypal.me/your-paypal"

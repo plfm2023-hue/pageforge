@@ -28,17 +28,15 @@
 If PageForge saves you time, consider supporting its development — every tip helps keep it open-source and ad-free. Thank you! 🙏
 
 - **GitHub Sponsors** — once approved, a `Sponsor` button appears automatically on this repo (wired via [`.github/FUNDING.yml`](.github/FUNDING.yml)).
-- **PayPal / Buy Me a Coffee / Ko-fi** — replace the placeholders in `FUNDING.yml` with your own handles/links:
+- **PayPal** — replace the placeholder in `FUNDING.yml` with your `paypal.me` link:
   - PayPal: `https://paypal.me/your-paypal`
-  - Buy Me a Coffee: `https://buymeacoffee.com/your-handle`
-  - Ko-fi: `https://ko-fi.com/your-handle`
 
-Scan to tip (placeholder QR — regenerate with your real link):
+Scan to tip (placeholder QR — point it at your PayPal link once set):
 
 ![Sponsor QR](assets/sponsor-qr.png)
 
-> Maintainers: edit `.github/FUNDING.yml` and the links above. To regenerate the QR from your own link, run:
-> `python -c "import segno; segno.make('YOUR_LINK').save('assets/sponsor-qr.png', scale=8, border=4)"`
+> Maintainers: set your `paypal.me` handle in `.github/FUNDING.yml` and regenerate the QR:
+> `python -c "import segno; segno.make('https://paypal.me/你的名').save('assets/sponsor-qr.png', scale=8, border=4)"`
 
 ---
 
