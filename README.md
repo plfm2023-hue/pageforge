@@ -1,110 +1,135 @@
-# HTML-to-Figma Plugin
+# PageForge
 
-Convert HTML/CSS directly into Figma designs using AI assistants (Claude Code, Cursor, Claude Desktop).
+> Turn any web page into an editable Figma design — capture from your browser, render in Figma, drive it with AI.
+
+**PageForge** is an open-source toolkit that converts HTML/CSS into editable Figma nodes. It ships as three cooperating pieces:
+
+1. **Chrome extension** (`chrome-extension/`) — click to capture the current page (or a selected element) and ship its HTML to your PageForge server.
+2. **Figma plugin** (`manifest.json` + `code.js` + `ui.html`) — connects to the server and renders incoming HTML as real, editable Figma layers (95+ CSS properties supported).
+3. **MCP / SSE bridge** (`mcp-server.js` + `sse-server.js`) — a small server that routes HTML from the extension (or any AI client) to the right Figma session. Also exposes an MCP tool so Claude Code / Cursor can send HTML straight to Figma.
+
+```
+┌──────────────┐   capture    ┌───────────────────────┐   SSE    ┌─────────────────┐
+│ Chrome Ext   │ ───────────▶ │  PageForge Server      │ ───────▶ │  Figma Plugin  │
+│ (web page)   │   POST html  │  (SSE + MCP bridge)    │          │  (draws nodes) │
+└──────────────┘             └───────────────────────┘          └─────────────────┘
+        ▲                         ▲                                     │
+        │                         │ MCP tool                           │ HTML → layers
+   AI clients (Claude/Cursor) ────┘                                     ▼
+                                                            Editable Figma design
+```
+
+> 📌 **Name & trademark note.** "PageForge" is a neutral working name chosen to avoid clashing with any existing commercial product (e.g. CoDesign / DesignGenie). Rename freely — search-and-replace `PageForge` / `pageforge` across the repo.
+
+---
 
 ## Features
 
-- **AI-powered conversion**: Send HTML from Claude Code, Cursor, or Claude Desktop directly to Figma
-- **95+ CSS properties**: Flexbox, Grid, gradients, shadows, transforms, positioning
-- **Team-ready**: Multi-user support with session isolation
-- **Production server**: No local setup required for team members
+- **One-click page capture** — the Chrome extension serializes the live DOM with inlined computed styles.
+- **High-fidelity import** — Flexbox, Grid, gradients, shadows, transforms, positioning, and more.
+- **AI-native** — an MCP server lets Claude Code / Cursor / Claude Desktop send HTML to Figma with a single prompt.
+- **Self-hostable** — run the bridge on your own infra (Render, Railway, Fly, a VM…). No vendor lock-in.
+- **MIT licensed** — fork it, ship it, sell it.
 
-## Quick Start (5 minutes)
+---
 
-### 1. Install the Figma Plugin
+## Quick start (5 minutes)
 
-1. Download: `manifest.json`, `code.js`, `ui.html`
-2. Figma → **Plugins → Development → Import plugin from manifest**
-3. Select `manifest.json`
+### 1. Install the Figma plugin (development)
 
-### 2. Get Your Session ID
+```bash
+npm install
+npm run build          # compiles src/code.ts -> code.js
+```
 
-1. Open the plugin in Figma
-2. Enable **"Enable MCP"** toggle
-3. Copy your Session ID (e.g., `user_abc12345`)
+Then in Figma: **Plugins → Development → Import plugin from manifest**, and select `manifest.json` in this repo.
 
-### 3. Configure Your AI Client
+### 2. Start the bridge server (local)
 
-Add to `~/.claude/mcp.json` (Claude Code) or equivalent:
+```bash
+node sse-server.js     # SSE + trigger endpoint on http://localhost:3003
+# (optional) node mcp-server.js   # if you want the stdio MCP server for AI clients
+```
+
+Open the plugin in Figma, enable **MCP**, and copy the **Session ID** it shows.
+
+### 3. Configure the Chrome extension
+
+1. `chrome://extensions` → enable **Developer mode** → **Load unpacked** → select `chrome-extension/`.
+2. Click the PageForge icon, fill in:
+   - **Server URL**: `http://localhost:3003`
+   - **API Key**: `dev-key`
+   - **Session ID**: the one from the Figma plugin
+3. Open any web page, click **Capture & Send to Figma** → the design appears in your Figma file.
+
+> The Chrome extension needs `<all_urls>` host permission so it can POST to your bridge cross-origin.
+
+---
+
+## Using it with AI (MCP)
+
+Add to `~/.claude/mcp.json` (Claude Code) or your client's MCP config:
 
 ```json
 {
   "mcpServers": {
-    "figma-html-bridge": {
-      "command": "npx",
-      "args": ["-y", "github:Floristeady/html-to-figma"],
+    "pageforge": {
+      "command": "node",
+      "args": ["./mcp-server.js"],
       "env": {
-        "FIGMA_SERVER_URL": "https://html-to-figma.onrender.com",
-        "FIGMA_SESSION_ID": "YOUR_SESSION_ID",
-        "API_KEY": "figma-team-2026"
+        "FIGMA_SERVER_URL": "http://localhost:3003",
+        "API_KEY": "dev-key",
+        "FIGMA_SESSION_ID": "YOUR_SESSION_ID"
       }
     }
   }
 }
 ```
 
-### 4. Test It
+Then in Claude Code: *"Send this HTML to Figma: `<div style='padding:40px;background:#5b5ef4;'><h1 style='color:white'>Hello</h1></div>`"*
 
-In Claude Code, say:
-> "Send this HTML to Figma: `<div style='background:blue; padding:40px;'><h1 style='color:white;'>Hello!</h1></div>`"
-
----
-
-## Architecture
-
-```
-┌─────────────────┐      ┌──────────────────────────────┐
-│  Claude Code    │      │     Render Server            │
-│  Cursor         │─────▶│  html-to-figma.onrender.com  │
-│  Claude Desktop │ HTTP │                              │
-└─────────────────┘      └──────────────┬───────────────┘
-                                        │ SSE
-                                        ▼
-                         ┌──────────────────────────────┐
-                         │       Figma Plugin           │
-                         │    (your Session ID)         │
-                         └──────────────────────────────┘
-```
-
-## Supported CSS
-
-| Category | Properties |
-|----------|------------|
-| **Layout** | `display: flex/grid`, `flex-direction`, `justify-content`, `align-items`, `gap` |
-| **Grid** | `grid-template-columns`, `grid-template-areas`, `grid-column`, `grid-row` |
-| **Spacing** | `padding`, `margin`, `width`, `height`, `min-width`, `max-width` |
-| **Colors** | `background`, `color`, `linear-gradient()`, `rgba()` |
-| **Borders** | `border`, `border-radius`, `box-shadow` |
-| **Typography** | `font-size`, `font-weight`, `line-height`, `text-align`, `letter-spacing` |
-| **Effects** | `opacity`, `transform`, `filter`, `backdrop-filter` |
-| **Position** | `position: absolute/relative/fixed`, `top`, `left`, `z-index` |
-
-## Documentation
-
-- **[Installation Guide](./docs/INSTALLATION_GUIDE.md)** - Detailed setup for all AI clients
-- [AI Examples](./docs/AI_EXAMPLES.md) - Advanced examples and best practices
-- [Code Analysis](./docs/CODE_ANALYSIS.md) - Technical CSS support details
-
-## Local Development
-
-For contributors or local testing:
-
-```bash
-git clone https://github.com/Floristeady/html-to-figma.git
-cd html-to-figma
-git checkout dev           # Use dev branch for local
-npm install
-npm run build
-node sse-server.js         # Start local server
-```
-
-Update `.mcp.json` to use `http://localhost:3003`.
-
-## License
-
-MIT
+See [`docs/DEPLOY.md`](./docs/DEPLOY.md) for production deployment and [`docs/CHROME_EXTENSION.md`](./docs/CHROME_EXTENSION.md) for the extension details.
 
 ---
 
-**Server**: https://html-to-figma.onrender.com
-**Last Updated**: January 2026
+## Project layout
+
+```
+pageforge/
+├── manifest.json            # Figma plugin manifest
+├── code.js / ui.html        # Built Figma plugin (npm run build regenerates code.js)
+├── src/                     # Figma plugin TypeScript source + HTML/CSS parser
+├── mcp-server.js            # Stdio MCP server for AI clients
+├── sse-server.js            # SSE + HTTP trigger bridge to Figma
+├── start-servers.js         # Convenience: run both
+├── config/                  # Shared server config
+├── chrome-extension/        # 🆕 Browser capture extension (the missing "web page" piece)
+│   ├── manifest.json
+│   ├── content.js           # DOM → HTML serializer (inlined computed styles)
+│   ├── popup.html / popup.js
+├── docs/                    # Deployment, store listing, extension guide
+└── .github/                 # Issue / PR templates
+```
+
+---
+
+## License & attribution
+
+PageForge is a derivative of **[html-to-figma](https://github.com/Floristeady/html-to-figma)** by Florencia Rosenfeld, used under the **MIT License**.
+
+- The original MIT License and copyright notice are preserved in [`LICENSE`](./LICENSE).
+- Derivative-work attribution is recorded in [`NOTICE.md`](./NOTICE.md).
+
+This project is not affiliated with, nor endorsed by, any commercial "HTML → design" product or Figma, Inc. "Figma" is a trademark of Figma, Inc.
+
+---
+
+## Contributing
+
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md). Bugs, capture-fidelity improvements, and new AI-client adapters are all welcome.
+
+---
+
+**Status:** v0.1.0 — core pipeline (extension → bridge → plugin → Figma) working; type-check has known upstream-compat notes (see below).
+
+> ⚠️ **`npm run typecheck` note:** the Figma plugin source references a few APIs (`gridColumnCount`, blur effects) that changed in the latest `@figma/plugin-typings`. These are pre-existing in the upstream code and do **not** affect the esbuild build or runtime — `npm run build` is the authoritative build. Pin `@figma/plugin-typings` to an older version if you want a clean `tsc` run.

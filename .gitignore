@@ -84,3 +84,8 @@ coverage/
 # AI assistant files
 .claude/
 .mcp.json
+
+# PageForge local config / runtime
+.mcp.json.example.local
+pageforge-config.json
+

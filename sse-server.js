@@ -222,6 +222,10 @@ class FigmaSSEServer {
   }
 
   handleMCPTrigger(req, res) {
+    // Allow browser/extension clients to POST cross-origin
+    res.setHeader('Access-Control-Allow-Origin', SERVER_CONFIG.ALLOWED_ORIGINS);
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
     // Verify API key for production
     if (!this.verifyApiKey(req)) {
       console.log('[SSE-SERVER] MCP trigger rejected: Invalid API key');

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <style>
+    :root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { width: 320px; margin: 0; padding: 14px 16px 18px; color: #1a1a1a; }
+    h1 { font-size: 15px; margin: 0 0 2px; }
+    .sub { font-size: 11px; color: #888; margin: 0 0 12px; }
+    label { display: block; font-size: 11px; font-weight: 600; margin: 10px 0 4px; color: #444; }
+    input { width: 100%; box-sizing: border-box; padding: 7px 8px; font-size: 12px;
+            border: 1px solid #d0d0d0; border-radius: 6px; }
+    .row { display: flex; gap: 8px; }
+    .row > div { flex: 1; }
+    button { margin-top: 14px; width: 100%; padding: 10px; font-size: 13px; font-weight: 600;
+             color: #fff; background: #5b5ef4; border: none; border-radius: 8px; cursor: pointer; }
+    button:hover { background: #4a4ddb; }
+    button:disabled { background: #b9baf3; cursor: default; }
+    .status { margin-top: 12px; font-size: 12px; line-height: 1.45; min-height: 16px; }
+    .status.ok { color: #1a8a3c; }
+    .status.err { color: #c0392b; }
+    .hint { font-size: 10.5px; color: #999; margin-top: 10px; line-height: 1.5; }
+    .opt { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #555; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>PageForge Capture</h1>
+  <p class="sub">Send the current page to Figma via PageForge</p>
+
+  <label for="serverUrl">Server URL</label>
+  <input id="serverUrl" type="text" placeholder="https://your-pageforge-server.com" />
+
+  <label for="apiKey">API Key</label>
+  <input id="apiKey" type="text" placeholder="dev-key" />
+
+  <label for="sessionId">Figma Session ID</label>
+  <input id="sessionId" type="text" placeholder="user_xxxxxxxx (from the Figma plugin)" />
+
+  <div class="opt">
+    <input id="useSelection" type="checkbox" />
+    <label for="useSelection" style="margin:0;font-weight:400;">Capture only the selected element</label>
+  </div>
+
+  <button id="capture">Capture &amp; Send to Figma</button>
+  <div id="status" class="status"></div>
+
+  <p class="hint">
+    Open the PageForge Figma plugin, enable <b>MCP</b>, and copy its Session ID here.
+    Deploy your own SSE/MCP server (see docs/DEPLOY.md) or use a community instance.
+  </p>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>

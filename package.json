@@ -1,11 +1,11 @@
 {
-  "name": "html-to-figma-mcp",
-  "version": "3.0.0",
-  "description": "Figma plugin to convert HTML to Figma nodes via MCP integration.",
+  "name": "pageforge",
+  "version": "0.1.0",
+  "description": "PageForge — turn any web page into an editable Figma design, powered by AI/MCP. Figma plugin + MCP/SSE bridge + Chrome capture extension.",
   "type": "module",
   "main": "mcp-server.js",
   "bin": {
-    "html-to-figma-mcp": "./mcp-server.js"
+    "pageforge": "./mcp-server.js"
   },
   "scripts": {
     "dev": "npm run build:watch",

@@ -6,14 +6,14 @@
     "  FIGMA_SERVER_URL: http://localhost:3003",
     "  API_KEY: dev-key",
     "",
-    "PRODUCTION (Render):",
-    "  FIGMA_SERVER_URL: https://html-to-figma.onrender.com",
-    "  API_KEY: figma-team-2026",
+    "PRODUCTION (your deployed server):",
+    "  FIGMA_SERVER_URL: https://pageforge.example.com",
+    "  API_KEY: <your-strong-key>",
     "",
-    "Get SESSION_ID from Figma plugin > MCP Config button"
+    "Get SESSION_ID from the PageForge Figma plugin > MCP Config button"
   ],
   "mcpServers": {
-    "figma-html-bridge": {
+    "pageforge": {
       "command": "node",
       "args": ["./mcp-server.js"],
       "env": {

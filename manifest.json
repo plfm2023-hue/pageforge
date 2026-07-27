@@ -1,9 +1,9 @@
 {
-  "name": "HTML to Figma",
-  "id": "html-to-figma",
+  "name": "PageForge — HTML to Figma",
+  "id": "pageforge",
   "api": "1.0.0",
   "main": "code.js",
   "ui": "ui.html",
   "editorType": ["figma"],
   "enableProposedApi": false
-} 
+}
