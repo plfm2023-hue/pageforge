@@ -1,0 +1,23 @@
+# Render 部署配置 (Infrastructure as Code)
+# 在 Render 控制台 "New" -> "Blueprint" 选择本仓库，或连接仓库后自动读取此文件。
+services:
+  - type: web
+    name: pageforge
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    # 从 dev 分支自动部署
+    branch: dev
+    # 健康检查：服务端路由为 /mcp-status
+    healthCheckPath: /mcp-status
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3003
+      # 生产环境请务必改成强随机值，并保持与 Figma 插件/扩展里发送的 API Key 一致
+      - key: API_KEY
+        sync: false
+      # 允许的跨域来源，逗号分隔；生产可收紧为你的域名
+      - key: ALLOWED_ORIGINS
+        value: "*"

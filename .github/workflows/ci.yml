@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Figma plugin (esbuild)
+        run: npm run build
+
+      - name: Server syntax check
+        run: node --check sse-server.js && node --check mcp-server.js
+
+      # 注：npm run typecheck 存在上游既有类型错误(新版 @figma/plugin-typings API 变更)，
+      # 不影响 esbuild 构建与实际运行，故不纳入 CI 门禁。

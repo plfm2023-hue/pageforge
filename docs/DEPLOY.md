@@ -34,30 +34,35 @@ Server URL: `http://localhost:3003`, API key: `dev-key` (dev mode skips auth).
 In production set `NODE_ENV=production` and a strong `API_KEY`, then configure the
 extension / MCP clients with that key.
 
-## Deploy to Render (example)
+## Deploy to Render (Blueprint — 推荐)
 
-1. New **Web Service**, connect your GitHub repo.
-2. Build command: `npm install`
-3. Start command: `node sse-server.js`
-4. Add env `NODE_ENV=production`, `API_KEY=<strong>`, `PORT=3003`.
-5. Use the generated `https://….onrender.com` as the extension's **Server URL**.
+仓库根目录已包含 `render.yaml`，自动部署：
+
+1. Render 控制台 **New** → **Blueprint** → 选择本仓库（或先 Connect 仓库）。
+2. Blueprint 会读取 `render.yaml`：创建名为 `pageforge` 的免费 Web 服务，
+   用 `Dockerfile` 构建，从 `dev` 分支部署，健康检查 `/mcp-status`。
+3. 在 Render 的 Environment 里给 `API_KEY` 设一个强随机值（首次部署前填好）。
+4. 部署完成后拿到 `https://<你的实例>.onrender.com`，填进扩展的 **Server URL**。
+
+> 手动方式（不用 Blueprint）也行：New Web Service → Build `npm install` → Start
+> `node sse-server.js` → 加 `NODE_ENV=production`、`API_KEY=<strong>`、`PORT=3003`。
 
 > The free tier spins down when idle; the first capture after a pause may take a few
 > seconds while it wakes.
 
-## Docker (optional)
+## Docker
 
-```dockerfile
-FROM node:20-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm install --omit=dev
-COPY . .
-EXPOSE 3003
-CMD ["node", "sse-server.js"]
+仓库已提交 `Dockerfile`（基于 `node:20-alpine`，仅装运行时依赖）：
+
+```bash
+docker build -t pageforge .
+docker run -p 3003:3003 -e NODE_ENV=production -e API_KEY=strong pageforge
 ```
 
-Then: `docker build -t pageforge . && docker run -p 3003:3003 -e NODE_ENV=production -e API_KEY=strong pageforge`
+## CI
+
+仓库已提交 `.github/workflows/ci.yml`：在 `main` / `dev` 的 push 与 PR 上自动
+`npm install` → `npm run build` → 校验 `sse-server.js` / `mcp-server.js` 语法。
 
 ## Sharing with a team
 
