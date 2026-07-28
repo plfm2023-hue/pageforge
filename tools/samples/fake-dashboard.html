@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Fake Dashboard — PageForge Test</title>
+  <style>
+    body { display: flex; font-family: Inter, sans-serif; margin: 0; }
+    .sidebar { display: flex; flex-direction: column; width: 200px; padding: 16px; background: #111827; }
+    .sidebar a { color: #9ca3af; padding: 8px 0; text-decoration: none; }
+    .main { flex: 1; padding: 24px; display: flex; flex-wrap: wrap; gap: 16px; }
+    .card { width: 220px; padding: 16px; border: 1px solid #e5e7eb; border-radius: 8px; }
+    .card a { color: #2563eb; }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <a href="https://example.com/dash">Dashboard</a>
+    <a href="https://example.com/reports">Reports</a>
+    <a href="https://example.com/settings">Settings</a>
+  </aside>
+  <main class="main">
+    <div class="card"><h3>Users</h3><a href="https://example.com/users">View all</a></div>
+    <div class="card"><h3>Revenue</h3><a href="https://example.com/revenue">View report</a></div>
+    <div class="card"><h3>Settings</h3><a href="https://example.com/configure">Configure</a></div>
+  </main>
+</body>
+</html>

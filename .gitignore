@@ -89,3 +89,6 @@ coverage/
 .mcp.json.example.local
 pageforge-config.json
 
+# Headless conversion test build artifact
+tools/.cache.code.bundle.cjs
+
